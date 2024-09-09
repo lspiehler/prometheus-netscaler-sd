@@ -145,12 +145,16 @@ var getNetscalers = function(urltargets, callback) {
                     for(let i = 0; i < data.ns.length; i++) {
                         //console.log(data.ns[i].host_type);
                         if(data.ns[i].host_type=='sdx' || data.ns[i].host_type=='xen') {
-                            urltargets.netscalers.push({
-                                host: data.ns[i].ipv4_address,
-                                name: data.ns[i].hostname,
-                                port: 443
-                                //sdx: urltargets.targets[urltargets.index].host
-                            });
+                            if(data.ns[i].is_ha_configured == "false" || (data.ns[i].is_ha_configured == "true" && data.ns[i].ha_master_state == "Primary")) {
+                                urltargets.netscalers.push({
+                                    host: data.ns[i].ipv4_address,
+                                    name: data.ns[i].hostname,
+                                    port: 443
+                                    //sdx: urltargets.targets[urltargets.index].host
+                                });
+                            } else {
+                                console.log('Excluding ' + data.ns[i].hostname + ' because is_ha_configured=' +  data.ns[i].is_ha_configured + ' and ha_master_state=' + data.ns[i].ha_master_state);
+                            }
                         }
                     }
                 } else {
