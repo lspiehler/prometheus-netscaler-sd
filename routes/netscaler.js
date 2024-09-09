@@ -98,7 +98,8 @@ router.get('/', function(req, res, next) {
                         error: err
                     })
                 } else {
-                    res.json(resp);
+                    res.setHeader("X-Prometheus-Refresh-Interval-Seconds", "120");
+                    res.json(result);
                 }
             });
         }
